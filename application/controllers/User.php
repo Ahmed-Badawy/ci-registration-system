@@ -86,6 +86,10 @@ class User extends BaseController {
 		else die("not confirmed");
 	}
 
+	public function forgot_password(){
+		die("not done yet");
+	}
+
 
 
 /*********************************************************************

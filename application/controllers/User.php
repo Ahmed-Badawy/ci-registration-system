@@ -21,7 +21,7 @@ class User extends BaseController {
 		$data = new stdClass();
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('username', 'Username', 'trim|required|alpha_numeric|min_length[4]|is_unique[users.username]', array('is_unique' => 'This username already exists. Please choose another one.'));
-		$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[users.email]',array('is_unique' => 'This email already exists in the database. <a href="forget-pass" class="btn btn-xs btn-primary">have you forgot your password</a> ?'));
+		$this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[users.email]',array('is_unique' => 'This email already exists in the database. <a href="forgot-pass" class="btn btn-xs btn-primary">have you forgot your password</a> ?'));
 		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]');
 		$this->form_validation->set_rules('password_confirm', 'Confirm Password', 'trim|required|min_length[6]|matches[password]');
 		if ($this->form_validation->run() == false) {

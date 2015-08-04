@@ -23,12 +23,13 @@ class Base_model extends CI_Model {
 		}
 	}
 
-	protected function find($id) {
-		$table_identifier = isset($this->table_identifier) ?  : 'id';
+	protected function find($identifier_value) {
+		$table_identifier = isset($this->table_identifier) ? $this->table_identifier : 'id';
 		$this->db->select();
 		$this->db->from($this->table_name);
-		$this->db->where($table_identifier,$id);
-		return $this->db->get()->row();
+		$this->db->where($table_identifier,$identifier_value);
+		$ans = $this->db->get()->row();
+		return $ans;
 	}
 
 	

@@ -41,7 +41,7 @@ class User_model extends Base_model {
 			'last_seen' => date('Y-m-j H:i:s'),
 			'last_login' => date('Y-m-j H:i:s'),
 		);
-		$this->db->where('id',$this->id);
+		$this->db->where($this->table_identifier,$this->id);
 		$this->db->update($this->table_name,$update_data);
 	}
 
@@ -49,7 +49,7 @@ class User_model extends Base_model {
 		$update_data = array(
 			'is_confirmed' => 1,
 		);
-		$this->db->where('id',$this->id);
+		$this->db->where($this->table_identifier,$this->id);
 		$this->db->update($this->table_name,$update_data);	
 	}
 

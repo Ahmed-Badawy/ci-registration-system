@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User_model extends Base_model {
 	
 	public $table_name = "users";
+	public $table_identifier = "id";
 
 
 	public function create_user($username, $email, $password) {
@@ -14,7 +15,7 @@ class User_model extends Base_model {
 			'created_at' => date('Y-m-j H:i:s'),
 			'updated_at' => date('Y-m-j H:i:s'),
 		);
-		return ($this->db->insert('users', $data)) ? $this->db->insert_id() : false ;
+		return ($this->db->insert($this->table_name,$data)) ? $this->db->insert_id() : false ;
 	}
 
 	public function get_user_by_id($id){
@@ -25,7 +26,7 @@ class User_model extends Base_model {
 	
 	public function resolve_user_login($username, $password) {
 		$this->db->select();
-		$this->db->from('users');
+		$this->db->from($this->table_name);
 		$this->db->where('username', $username);
 		$user = $this->db->get()->row();
 		if($user && $this->verify_password_hash($password, $user->password)){
@@ -41,7 +42,7 @@ class User_model extends Base_model {
 			'last_login' => date('Y-m-j H:i:s'),
 		);
 		$this->db->where('id',$this->id);
-		$this->db->update('users',$update_data);
+		$this->db->update($this->table_name,$update_data);
 	}
 
 	public function confirm_user(){
@@ -49,7 +50,7 @@ class User_model extends Base_model {
 			'is_confirmed' => 1,
 		);
 		$this->db->where('id',$this->id);
-		$this->db->update('users',$update_data);	
+		$this->db->update($this->table_name,$update_data);	
 	}
 
 	public function prepare_user_data(){
@@ -66,7 +67,7 @@ class User_model extends Base_model {
 	}
 
 	public function get_all_users(){
-		return $this->db->get('users')->result();
+		return $this->db->get($this->table_name)->result();
 	}
 
 

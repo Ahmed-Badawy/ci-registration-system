@@ -58,6 +58,8 @@ $route['logout'] = 'user/logout';
 $route['users-control'] = 'user/users_control';
 $route['confirm-account/(:num)/(:any)'] = 'user/confirm_account/$1/$2';
 
+$route['test'] = 'user/testing';
+
 
 $route['default_controller'] = 'Welcome';
 $route['404_override'] = '';

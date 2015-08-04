@@ -83,11 +83,25 @@ class User extends BaseController {
 			$user->confirm_user();
 			redirect("login");
 		}
-		else die("not confirmed");
+		else die("error in confirmation");
 	}
 
 	public function forgot_password(){
-		die("not done yet");
+		$data = new stdClass();
+		$this->load->helper('form');
+		$email = $this->input->post('email');
+		if($email){
+			die($email);
+		}else{
+			$this->_view_layout("user/forgot-password",$data);								
+		}
+	}
+
+	public function testing(){
+		$user = $this->user_model->my_find(9);
+		echo "<pre>";
+		var_export($user);
+		die;
 	}
 
 

@@ -116,7 +116,7 @@ class User extends BaseController {
 		$msg = 'activate your account at: ahmed-badawy.com /n
 			<a href="'.base_url("/confirm-account/$id/$hashed_email").'" style="color:red;font-size:20px;">Activate My Account</a>
 		';
-		echo("<h3>this is the confirmation email: </h3> $msg <hr><hr><hr>");
+		echo("<div class='container'><pre> <h3>this is the confirmation email: </h3> $msg</pre> </div>");
 
 		$this->email->from('admin@ahmed-badawy.com', 'Ahmed Badawy');
 		$this->email->to($email);

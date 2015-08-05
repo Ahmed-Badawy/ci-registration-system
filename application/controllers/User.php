@@ -97,6 +97,7 @@ class User extends BaseController {
 		}
 	}
 
+
 	public function testing(){
 		$sql = "SELECT * FROM users WHERE id > ? AND is_confirmed = ? limit 0,5";
 		$array = [9,1];

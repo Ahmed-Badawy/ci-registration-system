@@ -12,32 +12,29 @@ class User_model extends Base_model {
 			'username'   => $username,
 			'email'      => $email,
 			'password'   => $this->hash_password($password),
-			'created_at' => date('Y-m-j H:i:s'),
-			'updated_at' => date('Y-m-j H:i:s'),
+			'created_at' => $this->mysql_date('now'),
+			'updated_at' => $this->mysql_date('now'),
 		);
 		return $this->my_create($data);
 	}
 	
 	public function resolve_user_login($username, $password) {
 		$user = $this->my_where(['username'=>$username]);
-		if($user && $this->verify_password_hash($password, $user->password)){
-			return $user;			
-		} 
+		if($user && $this->verify_password_hash($password, $user->password)) return $user;			
 		return false;
 	}
 	
 	public function approve_login() {
 		$update_array = array(
-			'last_seen' => date('Y-m-j H:i:s'),
-			'last_login' => date('Y-m-j H:i:s'),
+			'last_seen' => $this->mysql_date('now'),
+			'last_login' => $this->mysql_date('now'),
 		);
 		return $this->my_update($update_array);
 	}
 
 	public function set_random_password() {
 		$new_password = uniqid();
-		$hashed_new_password = $this->hash_password($new_password);
-		$this->my_set_to('password',$hashed_new_password);
+		$this->my_set_to('password',$this->hash_password($new_password));
 		return $new_password;
 	}
 

@@ -14,24 +14,33 @@ class Base_model extends CI_Model {
 	protected function verify_password_hash($password, $hash) {
 		return password_verify($password, $hash);
 	}
-	private function create_instance($row){
-		$properties_array = get_object_vars($row);
+	private function create_instance_from_array($array){
 		$class_name = get_class($this);
 		$instance = new $class_name;
-		foreach($properties_array as $key=>$val){
+		foreach($array as $key=>$val){
 			$instance->$key = $val;
 		}
 		return $instance;
+	}	
+	private function create_instance_from_row($row){
+		$properties_array = get_object_vars($row);
+		return $this->create_instance_from_array($properties_array);
 	}
-	private function instanctiate_results($results){
+	private function instanctiate_multiple_results($results){
 		$intances_array = [];
 		foreach($results as $val){
-			$instance = $this->create_instance($val);
+			$instance = $this->create_instance_from_row($val);
 			$intances_array[] = $instance;
 		}
 		return $intances_array;
 	}
-
+	protected function mysql_date($unix_time){
+		if($unix_time=="now") $unix_time = time();
+		return date('Y-m-j H:i:s',$unix_time);
+	}
+	protected function convert_date($unix_time,$format = "Y-m-j H:i:s"){
+		return date('Y-m-j H:i:s',$unix_time);
+	}
 
 
 
@@ -44,7 +53,7 @@ class Base_model extends CI_Model {
 		// $sql = "SELECT * FROM some_table WHERE id = ? AND status = ? AND author = ?";
 		// $this->db->query($sql, array(3, 'live', 'Rick'));
 		$results = $this->db->query($sql, $array)->result();		
-		$instances_array = $this->instanctiate_results($results);
+		$instances_array = $this->instanctiate_multiple_results($results);
 		return $instances_array;
 	}
 
@@ -58,13 +67,25 @@ class Base_model extends CI_Model {
 			$this->db->where($key,$val);		
 		}
 		$ans = $this->db->get()->row();
-		if($ans) {
-			return $instance = $this->create_instance($ans);
-		}else return false;
+		if($ans) return $instance = $this->create_instance_from_row($ans);
+		return false;
 	}	
 	public function my_create($create_array) {
 		return ($this->db->insert($this->table_name,$create_array)) ? $this->db->insert_id() : false ;
 	}	
+	public function my_update_by_id($id,$update_array) {
+		$id_name = $this->table_identifier;
+		$this->db->where($id_name,$id);
+		return $this->db->update($this->table_name, $update_array);
+	}
+	public function my_delete_by_id($id) {
+		$id_name = $this->table_identifier;
+		$this->db->where($id_name,$id);
+		return $this->db->delete($this->table_name);
+	}	
+	public function my_set_to_by_id($id,$field_name,$set_to) {
+		return $this->my_update_id($id,[$field_name=>$set_to]);
+	}
 
 /*********************************************************************
 On instance methods
@@ -78,7 +99,7 @@ On instance methods
 		$id_name = $this->table_identifier;
 		$this->db->where($id_name,$this->$id_name);
 		return $this->db->update($this->table_name, $update_array);
-	}	
+	}		
 	public function my_increment($field_name,$increment_by = 1) {
 		return $this->my_update([$field_name=>$this->$filed+$increment_by]);
 	}
@@ -98,6 +119,18 @@ On instance methods
 	}
 /**********************************************************************/
 
+
+/*********************************************************************
+Method Helpers
+**********************************************************************/
+	public function my_list($intances_array,$field_name,$unique=true){
+		$list = [];
+		foreach($instances_array as $val){
+			$list[] = $val->$field_name;
+		}
+		return ($unique) ? array_unique($list) : $list;
+	}
+/**********************************************************************/
 
 
 

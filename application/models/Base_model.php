@@ -36,11 +36,16 @@ class Base_model extends CI_Model {
 
 
 
-
+	public function my_get_table(){
+		$sql = "SELECT * FROM ".$this->table_name;
+		return $this->my_query($sql,[]);
+	}
 	public function my_query($sql,$array){
 		// $sql = "SELECT * FROM some_table WHERE id = ? AND status = ? AND author = ?";
 		// $this->db->query($sql, array(3, 'live', 'Rick'));
-		return $this->db->query($sql, $array);		
+		$results = $this->db->query($sql, $array)->result();		
+		$instances_array = $this->instanctiate_results($results);
+		return $instances_array;
 	}
 	public function my_find($identifier_value) {
 		return $this->my_where( [$this->table_identifier=>$identifier_value] );
@@ -77,12 +82,6 @@ class Base_model extends CI_Model {
 	}
 	public function my_set_to($field_name,$set_to) {
 		return $this->my_update([$field_name=>$set_to]);
-	}
-
-	public function my_get_table(){
-		$all = $this->db->get($this->table_name)->result();
-		$instances_array = $this->instanctiate_results($all);
-		return $instances_array;
 	}
 
 

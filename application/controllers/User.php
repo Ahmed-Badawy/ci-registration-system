@@ -98,9 +98,11 @@ class User extends BaseController {
 	}
 
 	public function testing(){
-		$user = $this->user_model->my_find(9);
+		$sql = "SELECT * FROM users WHERE id > ? AND is_confirmed = ? limit 0,5";
+		$array = [9,1];
+		$res = $this->user_model->my_query($sql,$array);
 		echo "<pre>";
-		var_export($user);
+		var_export($res);
 		die;
 	}
 

@@ -13,7 +13,7 @@ class User extends BaseController {
 	
 
 	public function users_control() {
-		$data['all_users'] = $this->user_model->get_all_users();
+		$data['all_users'] = $this->user_model->my_get_table();
 		$this->_view_layout("user/users_view/users_view",$data);
 	}
 	
@@ -52,7 +52,7 @@ class User extends BaseController {
 			$password = $this->input->post('password');
 			if ($user = $this->user_model->resolve_user_login($username, $password)) {
 				if(!$user->is_confirmed){
-					$this->_send_confirmation_msg($user->email);
+					$this->_send_confirmation_msg($user->id,$user->email);
 					$data->errors[] = 'Please Confirm this account from your email. we sent a new confirmation message to your email.';
 				} 
 				if($user->is_deleted) $data->errors[] = 'this user has been deleted. please contact the adminstration.';
@@ -78,9 +78,9 @@ class User extends BaseController {
 
 	public function confirm_account($id,$hashed_email){
 		$this->load->helper('security');
-		$user = $this->user_model->get_user_by_id($id);
+		$user = $this->user_model->my_find($id);
 		if(do_hash($user->email) == $hashed_email){
-			$user->confirm_user();
+			$user->my_set_to('is_confirmed',true);
 			redirect("login");
 		}
 		else die("error in confirmation");

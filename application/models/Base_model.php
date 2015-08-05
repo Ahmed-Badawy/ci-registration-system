@@ -8,30 +8,33 @@ class Base_model extends CI_Model {
 		$this->load->database();
 		$this->table_identifier = isset($this->table_identifier) ? $this->table_identifier : 'id';
 	}
-	
 	protected function hash_password($password) {
 		return password_hash($password, PASSWORD_BCRYPT);
 	}
-	
 	protected function verify_password_hash($password, $hash) {
 		return password_verify($password, $hash);
 	}
-
-	protected function create_instance($row){
+	private function create_instance($row){
 		$properties_array = get_object_vars($row);
+		$class_name = get_class($this);
+		$instance = new $class_name;
 		foreach($properties_array as $key=>$val){
-			$this->$key = $val;
+			$instance->$key = $val;
 		}
+		return $instance;
+	}
+	private function instanctiate_results($results){
+		$intances_array = [];
+		foreach($results as $val){
+			$instance = $this->create_instance($val);
+			$intances_array[] = $instance;
+		}
+		return $intances_array;
 	}
 
-	protected function find($identifier_value) {
-		$table_identifier = isset($this->table_identifier) ? $this->table_identifier : 'id';
-		$this->db->select();
-		$this->db->from($this->table_name);
-		$this->db->where($table_identifier,$identifier_value);
-		$ans = $this->db->get()->row();
-		return $ans;
-	}
+
+
+
 
 
 	public function my_query($sql,$array){
@@ -50,8 +53,7 @@ class Base_model extends CI_Model {
 		}
 		$ans = $this->db->get()->row();
 		if($ans) {
-			$this->create_instance($ans);
-			return $this;
+			return $instance = $this->create_instance($ans);
 		}else return false;
 	}	
 	public function my_delete() {
@@ -68,11 +70,21 @@ class Base_model extends CI_Model {
 		return ($this->db->insert($this->table_name,$create_array)) ? $this->db->insert_id() : false ;
 	}	
 	public function my_increment($field_name,$increment_by = 1) {
-		return $this->my_update([$field=>$this->$filed+$increment_by]);
+		return $this->my_update([$field_name=>$this->$filed+$increment_by]);
 	}
 	public function my_decrement($field_name,$increment_by = 1) {
-		return $this->my_update([$field=>$this->$filed-$increment_by]);
+		return $this->my_update([$field_name=>$this->$filed-$increment_by]);
 	}
+	public function my_set_to($field_name,$set_to) {
+		return $this->my_update([$field_name=>$set_to]);
+	}
+
+	public function my_get_table(){
+		$all = $this->db->get($this->table_name)->result();
+		$instances_array = $this->instanctiate_results($all);
+		return $instances_array;
+	}
+
 
 
 

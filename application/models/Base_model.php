@@ -47,6 +47,7 @@ class Base_model extends CI_Model {
 		$instances_array = $this->instanctiate_results($results);
 		return $instances_array;
 	}
+
 	public function my_find($identifier_value) {
 		return $this->my_where( [$this->table_identifier=>$identifier_value] );
 	}	
@@ -61,6 +62,13 @@ class Base_model extends CI_Model {
 			return $instance = $this->create_instance($ans);
 		}else return false;
 	}	
+	public function my_create($create_array) {
+		return ($this->db->insert($this->table_name,$create_array)) ? $this->db->insert_id() : false ;
+	}	
+
+/*********************************************************************
+On instance methods
+**********************************************************************/
 	public function my_delete() {
 		$id_name = $this->table_identifier;
 		$this->db->where($id_name,$this->$id_name);
@@ -71,9 +79,6 @@ class Base_model extends CI_Model {
 		$this->db->where($id_name,$this->$id_name);
 		return $this->db->update($this->table_name, $update_array);
 	}	
-	public function my_create($create_array) {
-		return ($this->db->insert($this->table_name,$create_array)) ? $this->db->insert_id() : false ;
-	}	
 	public function my_increment($field_name,$increment_by = 1) {
 		return $this->my_update([$field_name=>$this->$filed+$increment_by]);
 	}
@@ -82,6 +87,15 @@ class Base_model extends CI_Model {
 	}
 	public function my_set_to($field_name,$set_to) {
 		return $this->my_update([$field_name=>$set_to]);
+	}
+	public function my_save(){
+		$id_name = $this->table_identifier;
+		if($this->$id_name && $this->id_name>0){
+			//update model
+		}else{
+			//create model
+		}
+
 	}
 
 

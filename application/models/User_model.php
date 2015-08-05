@@ -34,6 +34,13 @@ class User_model extends Base_model {
 		return $this->my_update($update_array);
 	}
 
+	public function set_random_password() {
+		$new_password = uniqid();
+		$hashed_new_password = $this->hash_password($new_password);
+		$this->my_set_to('password',$hashed_new_password);
+		return $new_password;
+	}
+
 	public function prepare_user_data(){
 		$user_data = new stdClass();
 		$user_data->user_id 		= (int)$this->id;

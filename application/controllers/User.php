@@ -91,7 +91,9 @@ class User extends BaseController {
 		$this->load->helper('form');
 		$email = $this->input->post('email');
 		if($email){
-			die($email);
+			$user = $this->user_model->my_where(['email'=>$email]);
+			$new_password = $user->set_random_password();
+			die("your new password is: ".$new_password);
 		}else{
 			$this->_view_layout("user/forgot-password",$data);								
 		}

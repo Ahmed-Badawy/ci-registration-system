@@ -35,6 +35,7 @@
 				</div>
 				<div class="form-group">
 					<input type="submit" class="btn btn-default" value="Login">
+					<a href="<?= base_url("forgot-pass") ?>" class="btn btn-info">Forgot Your Password ?</a>
 				</div>
 			</form>
 		</div>

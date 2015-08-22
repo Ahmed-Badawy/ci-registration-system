@@ -1,11 +1,22 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class User_model extends Base_model {
+require("CI-IRON-DB/IRON_init.php");
+
+class User_model extends \IRON\IRON_init {
 	
 	public $table_name = "users";
-	public $table_identifier = "id";
+//	public $table_identifier = "id";
+	public $login_names = ['username','email','password'];
 
+
+
+	protected function hash_password($password) {
+		return password_hash($password, PASSWORD_BCRYPT);
+	}
+	protected function verify_password_hash($password, $hash) {
+		return password_verify($password, $hash);
+	}
 
 	public function create_user($username, $email, $password) {
 		$data = array(
@@ -19,7 +30,7 @@ class User_model extends Base_model {
 	}
 	
 	public function resolve_user_login($username, $password) {
-		$user = $this->my_where(['username'=>$username]);
+		$user = $this->my_find_by_array(['username'=>$username]);
 		if($user && $this->verify_password_hash($password, $user->password)) return $user;			
 		return false;
 	}
@@ -49,6 +60,11 @@ class User_model extends Base_model {
 		$user_data->last_login 		= $this->last_login;
 		$user_data->is_logged_in 	= true;
 		return $user_data;
+	}
+
+	public function def_username($val){
+//		die($val);
+		return $val."hello";
 	}
 
 

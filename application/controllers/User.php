@@ -2,6 +2,13 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require('BaseController.php');
 
+
+function err($x){
+	echo "<pre>";
+	var_export($x);
+	echo "</pre><hr>";
+}
+
 class User extends BaseController {
 
 	public function __construct() {
@@ -101,11 +108,24 @@ class User extends BaseController {
 
 
 	public function testing(){
-		$sql = "SELECT * FROM users WHERE id > ? AND is_confirmed = ? limit 0,5";
-		$array = [9,1];
-		$res = $this->user_model->my_query($sql,$array);
-		echo "<pre>";
-		var_export($res);
+//		$sql = "SELECT * FROM users WHERE id > ? AND is_confirmed = ? limit 0,5";
+//		$array = [9,1];
+//		$res = $this->user_model->my_query($sql,$array);
+		$obj = $this->user_model;
+
+
+//		$res1 = $obj->i_find('9');
+//		err($res1);
+//		$res2 = $obj->i_find('username','ahmed3');
+//		err($res2);
+//		$res2 = $obj->i_find(['username'=>'ahmed3',"email"=>"courtaks3@yahoo.com"]);
+//		err($res2);
+//		$res4 = $obj->i_login_check("courtaks3@yahoo.com","123");
+//		err($res4);
+//		$obj->i_find('username','ahmedbadawy23')->i_update('password','888');
+		$res5 = $obj->i_get_table()->get_array('email');
+		err($res5);
+
 		die;
 	}
 
